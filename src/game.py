@@ -5,6 +5,8 @@ from src.board import Board
 from src.colour import Colour
 from src.strategies import Strategy
 from src.move_not_possible_exception import MoveNotPossibleException
+from src.strategies import HumanStrategy
+
 
 
 class ReadOnlyBoard:
@@ -31,13 +33,15 @@ class ReadOnlyBoard:
 
 
 class Game:
-    def __init__(self, white_strategy: Strategy, black_strategy: Strategy, first_player: Colour):
+    def __init__(self, white_strategy: Strategy, black_strategy: Strategy, first_player: Colour, show_computer_roll: bool = False):
         self.board = Board.create_starting_board()
         self.first_player = first_player
         self.strategies = {
             Colour.WHITE: white_strategy,
             Colour.BLACK: black_strategy
         }
+        self.show_computer_roll = show_computer_roll
+
 
     def run_game(self, verbose=True):
         if verbose:
@@ -75,6 +79,10 @@ class Game:
             opponents_moves = moves.copy()
             moves.clear()
 
+            if self.show_computer_roll and not isinstance(self.strategies[colour], HumanStrategy):
+                print("Computer's roll:", dice_roll)
+
+
             self.strategies[colour].move(
                 ReadOnlyBoard(self.board),
                 colour,
@@ -82,6 +90,10 @@ class Game:
                 lambda location, die_roll: handle_move(location, die_roll),
                 {'dice_roll': previous_dice_roll, 'opponents_move': opponents_moves}
             )
+
+            if isinstance(self.strategies[colour], HumanStrategy):
+                print("Board after your final move:")
+                self.board.print_board()
 
             if verbose and len(dice_roll) > 0:
                 print('FYI not all moves were made. %s playing %s did not move %s' % (

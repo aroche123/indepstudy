@@ -20,7 +20,9 @@ if __name__ == '__main__':
     game = Game(
         white_strategy=HumanStrategy(name),
         black_strategy=chosen_strategy,
-        first_player=Colour(randint(0, 1))
+        first_player=Colour(randint(0, 1)),
+        show_computer_roll=True  
+
     )
 
     game.run_game(verbose=False)

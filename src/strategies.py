@@ -1,5 +1,6 @@
 import time
 from random import shuffle
+import random
 from src.piece import Piece
 from src.move_not_possible_exception import MoveNotPossibleException
 from src.colour import Colour
@@ -238,3 +239,28 @@ class MoveRandomPiece(Strategy):
                 if board.is_move_possible(piece, die_roll):
                     make_move(piece.location, die_roll)
                     break
+
+class MoveMostlySmart(Strategy):
+    def __init__(self, base_strategy: Strategy = None, random_turn_range=(0, 20), game_index: int = None):
+        from src.strategies import MoveFurthestBackStrategy
+        self.base_strategy = base_strategy if base_strategy else MoveFurthestBackStrategy()
+        self.random_strategy = MoveRandomPiece()
+        self.random_turn_number = random.randint(*random_turn_range)
+        self.turn_counter = 0
+        self.random_move_done = False
+        self.game_index = game_index
+
+
+    @staticmethod
+    def get_difficulty():
+        return "Medium+Random"
+
+    def move(self, board, colour, dice_roll, make_move, opponents_activity):
+        self.turn_counter += 1
+        if not self.random_move_done and self.turn_counter == self.random_turn_number:
+            #print(f"[Game {self.game_index}] Random move triggered on turn {self.turn_counter}")
+            self.random_strategy.move(board, colour, dice_roll, make_move, opponents_activity)
+            self.random_move_done = True
+
+        else:
+            self.base_strategy.move(board, colour, dice_roll, make_move, opponents_activity)
