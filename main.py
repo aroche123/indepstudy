@@ -6,6 +6,8 @@ from src.strategies import Strategy
 from src.strategies import MoveFurthestBackStrategy, MoveMostlySmart
 from src.strategies import MoveRandomPiece
 from src.experiment import Experiment
+from src.strategies import LookAheadStrategy
+
 
 
 class Experiment:
@@ -41,9 +43,9 @@ class Experiment:
 
 if __name__ == "__main__":
     experiment = Experiment(
-        games_to_play=100,
+        games_to_play=1000,
         white_strategy_factory=lambda game_index: MoveFurthestBackStrategy(),
-        black_strategy_factory=lambda game_index: MoveMostlySmart(MoveFurthestBackStrategy(), game_index=game_index)
+        black_strategy_factory=lambda game_index: MoveFurthestBackStrategy()
     )
     experiment.run()
     experiment.print_results()
