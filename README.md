@@ -1,3 +1,6 @@
+# CREDIT
+the bulk of this code came from https://github.com/aknandi/backgammon all credit to this code!!!!
+
 # backgammon
 Python modules to play backgammon (human or computer)
 
